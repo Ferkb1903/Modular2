@@ -1,0 +1,16 @@
+# Quick Test Macro
+# Test the simulation with few events to verify functionality
+
+# Set verbose levels
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+# Initialize the run
+/run/initialize
+
+# Set production cuts
+/run/setCut 0.1 mm
+
+# Quick test with few events
+/run/beamOn 100

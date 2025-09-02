@@ -1,0 +1,43 @@
+# =============================================================================
+# MACRO DE DEMOSTRACIÓN VISUAL COMPLETA - HDR BRACHYTHERAPY
+# =============================================================================
+
+# Inicializar geometría
+/run/initialize
+
+# Configurar visualización OpenGL con Qt
+/vis/open OGLSQt 800x600-0+0
+
+# Configurar escena básica
+/vis/drawVolume
+/vis/scene/add/trajectories smooth
+
+# Configurar punto de vista óptimo para ver la fuente
+/vis/viewer/set/viewpointVector -1 -1 -1
+/vis/viewer/set/lightsVector -1 0 0
+/vis/viewer/zoom 3
+
+# Configurar colores para mejor visualización
+/vis/modeling/trajectories/create/drawByParticleID
+/vis/modeling/trajectories/drawByParticleID-0/set gamma blue
+/vis/modeling/trajectories/drawByParticleID-0/set e- red
+/vis/modeling/trajectories/drawByParticleID-0/set e+ green
+
+# Hacer volúmenes semi-transparentes para ver el interior
+/vis/viewer/set/style surface
+/vis/viewer/set/hiddenMarker true
+
+# Configurar partículas para visualización
+/gun/particle gamma
+/gun/energy 317 keV
+
+# DEMO: Ejecutar pocos eventos para visualización clara
+/run/beamOn 20
+
+# Instrucciones para el usuario
+/vis/scene/add/text2D 0.1 0.9 24 0 0 "HDR Ir-192 Brachytherapy Simulation"
+/vis/scene/add/text2D 0.1 0.85 18 0 0 "Blue: Gamma rays | Red: Electrons"
+/vis/scene/add/text2D 0.1 0.8 18 0 0 "Center: Ir-192 source capsule"
+
+# Actualizar vista
+/vis/viewer/refresh

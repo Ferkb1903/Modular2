@@ -1,0 +1,16 @@
+# Simple TG-43 validation macro
+# Run with minimal configuration
+
+# Set verbose levels
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+# Initialize the run
+/run/initialize
+
+# Set production cuts
+/run/setCut 0.1 mm
+
+# Run simulation
+/run/beamOn 1000

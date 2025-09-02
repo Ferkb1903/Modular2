@@ -1,0 +1,25 @@
+# Macro for heterogeneous phantom simulation
+# Includes tissue heterogeneities and OARs
+
+# Initialize random seed
+/random/setSeeds 987654 456789
+
+# Set physics cuts
+/run/setCut 0.05 mm
+/run/setCutForAGivenParticle gamma 0.01 mm
+/run/setCutForAGivenParticle e- 0.05 mm
+/run/setCutForAGivenParticle e+ 0.05 mm
+
+# Set primary generator
+/gun/particle gamma
+/gun/energy 316.51 keV
+/gun/position 0 0 0 mm
+/gun/direction 0 0 1
+
+# Run simulation with moderate statistics
+/run/beamOn 5000
+
+# Print information
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0

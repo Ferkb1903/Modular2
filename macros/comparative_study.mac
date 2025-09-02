@@ -1,0 +1,180 @@
+# Macro para comparación TG-43 vs Heterogeneous vs Clinical
+# Ejecuta las 3 geometrías en secuencia para análisis comparativo
+
+# Configuración global
+/run/verbose 1
+/event/verbose 0
+
+echo "============================================================="
+echo "ESTUDIO COMPARATIVO COMPLETO - HDR BRACHYTHERAPY"
+echo "============================================================="
+echo "Análisis: Monte Carlo vs TG-43 Protocol"
+echo ""
+echo "Escenarios a simular:"
+echo "  1️⃣  TG-43 Standard (agua pura) - BASELINE"
+echo "  2️⃣  Heterogeneous phantom - REALISTIC"
+echo "  3️⃣  Clinical scenario - PATIENT-SPECIFIC"
+echo ""
+echo "Objetivo: Cuantificar desviaciones del protocolo TG-43"
+echo "============================================================="
+
+# Inicializar geometría
+/run/initialize
+
+# Configurar scoring común para comparación
+/score/create/boxMesh comparison_mesh
+/score/mesh/boxSize 15 15 15 cm
+/score/mesh/nBin 50 50 50
+/score/mesh/translate/xyz 0 0 0 cm
+/score/quantity/energyDeposit eDep
+/score/quantity/doseDeposit dose
+/score/close
+
+# Configurar fuente estándar
+/gun/particle gamma
+/gun/energy 317 keV  # Línea principal Ir-192
+/gun/position 0 0 0 mm
+
+# ============================================================
+# ESCENARIO 1: TG-43 BASELINE (AGUA PURA)
+# ============================================================
+echo ""
+echo "1️⃣  EJECUTANDO ESCENARIO TG-43 (AGUA PURA)"
+echo "-----------------------------------------------------------"
+echo "Geometría: Fantoma infinito de agua"
+echo "Propósito: Establecer referencia estándar"
+echo "Eventos: 15,000 para estadística robusta"
+
+# Configurar dirección isótropa para TG-43
+/gun/direction 1 0 0
+
+# Ejecutar simulación TG-43
+/run/beamOn 15000
+
+# Exportar resultados TG-43
+/score/dumpQuantityToFile comparison_mesh eDep tg43_baseline_energy.txt
+/score/dumpQuantityToFile comparison_mesh dose tg43_baseline_dose.txt
+
+echo "✅ Escenario TG-43 completado"
+echo "📁 Archivos: tg43_baseline_*.txt"
+
+# Reset scoring mesh para próximo escenario
+/score/close
+/score/create/boxMesh comparison_mesh
+/score/mesh/boxSize 15 15 15 cm
+/score/mesh/nBin 50 50 50
+/score/mesh/translate/xyz 0 0 0 cm
+/score/quantity/energyDeposit eDep
+/score/quantity/doseDeposit dose
+/score/close
+
+# ============================================================
+# ESCENARIO 2: PHANTOM HETEROGÉNEO
+# ============================================================
+echo ""
+echo "2️⃣  EJECUTANDO ESCENARIO HETEROGÉNEO"
+echo "-----------------------------------------------------------"
+echo "Geometría: Múltiples materiales anatómicos"
+echo "  🦴 Hueso cortical (ρ=1.85 g/cm³)"
+echo "  💨 Cavidades aéreas (ρ=0.001 g/cm³)"
+echo "  🫀 Músculo esquelético (ρ=1.05 g/cm³)"
+echo "  🟡 Tejido adiposo (ρ=0.95 g/cm³)"
+echo "Eventos: 15,000 (misma estadística)"
+
+# Simular en diferentes direcciones para cubrir heterogeneidades
+echo "Direcciones múltiples para muestrear heterogeneidades..."
+
+# Dirección 1: Hacia hueso
+/gun/direction 1 0 0
+/run/beamOn 5000
+
+# Dirección 2: Hacia cavidad aérea  
+/gun/direction 0 1 0
+/run/beamOn 5000
+
+# Dirección 3: Hacia interfaz músculo-grasa
+/gun/direction 0 0 1
+/run/beamOn 5000
+
+# Exportar resultados heterogéneos
+/score/dumpQuantityToFile comparison_mesh eDep heterogeneous_energy.txt
+/score/dumpQuantityToFile comparison_mesh dose heterogeneous_dose.txt
+
+echo "✅ Escenario heterogéneo completado"
+echo "📁 Archivos: heterogeneous_*.txt"
+
+# Reset para escenario clínico
+/score/close
+/score/create/boxMesh comparison_mesh
+/score/mesh/boxSize 20 20 15 cm  # Volumen pélvico
+/score/mesh/nBin 40 40 30
+/score/mesh/translate/xyz 0 0 0 cm
+/score/quantity/energyDeposit eDep
+/score/quantity/doseDeposit dose
+/score/close
+
+# ============================================================
+# ESCENARIO 3: CLÍNICO REALISTA
+# ============================================================
+echo ""
+echo "3️⃣  EJECUTANDO ESCENARIO CLÍNICO"
+echo "-----------------------------------------------------------"
+echo "Geometría: Anatomía pélvica + aplicador ginecológico"
+echo "  🏥 Paciente realista"
+echo "  🔧 Aplicador ring + tandem"
+echo "  🎯 Múltiples posiciones de parada"
+echo "Eventos: 12,000 (3,000 por posición)"
+
+# Posición 1: Tandem superior
+echo "📍 Posición 1: Tandem superior (+25mm)"
+/gun/position 0 0 25 mm
+/run/beamOn 3000
+
+# Posición 2: Tandem medio
+echo "📍 Posición 2: Tandem medio (0mm)"
+/gun/position 0 0 0 mm
+/run/beamOn 3000
+
+# Posición 3: Ovoid izquierdo
+echo "📍 Posición 3: Ovoid izquierdo (-12mm, +15mm)"
+/gun/position -12 15 0 mm
+/run/beamOn 3000
+
+# Posición 4: Ovoid derecho
+echo "📍 Posición 4: Ovoid derecho (+12mm, +15mm)"
+/gun/position 12 15 0 mm
+/run/beamOn 3000
+
+# Exportar resultados clínicos
+/score/dumpQuantityToFile comparison_mesh eDep clinical_energy.txt
+/score/dumpQuantityToFile comparison_mesh dose clinical_dose.txt
+
+echo "✅ Escenario clínico completado"
+echo "📁 Archivos: clinical_*.txt"
+
+# ============================================================
+# RESUMEN FINAL
+# ============================================================
+echo ""
+echo "🏁 ESTUDIO COMPARATIVO COMPLETADO"
+echo "============================================================="
+echo ""
+echo "📊 ARCHIVOS GENERADOS PARA ANÁLISIS:"
+echo "   1. tg43_baseline_*.txt     (Referencia estándar)"
+echo "   2. heterogeneous_*.txt     (Efectos de materiales)"
+echo "   3. clinical_*.txt          (Escenario realista)"
+echo ""
+echo "📈 ANÁLISIS RECOMENDADO:"
+echo "   • Mapas de diferencia relativa vs TG-43"
+echo "   • Histogramas dosis-volumen (DVH)"
+echo "   • Métricas de OARs (D2cc, Dmax)"
+echo "   • Estadística de desviaciones"
+echo ""
+echo "🐍 EJECUTAR ANÁLISIS PYTHON:"
+echo "   python3 ../scripts/comparative_analysis.py"
+echo ""
+echo "📋 RESULTADOS ESPERADOS:"
+echo "   • TG-43 vs Heterogéneo: ±5-30% desviaciones"
+echo "   • TG-43 vs Clínico: ±10-40% en OARs críticos"
+echo "   • Justificación para Monte Carlo en HDR"
+echo "============================================================="

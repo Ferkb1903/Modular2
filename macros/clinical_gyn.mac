@@ -1,0 +1,70 @@
+# Macro para simulación clínica realista - Aplicador ginecológico
+# Simula braquiterapia HDR de cérvix con aplicador ring+tandem
+
+# Configuración inicial
+/run/verbose 1
+/event/verbose 0
+
+# Inicializar geometría clínica
+/run/initialize
+
+# Configurar fuente HDR realista
+/gun/particle gamma
+/gun/energy 380 keV  # Energía media Ir-192
+/gun/position 0 0 0 mm
+
+# Configurar aplicador ginecológico
+echo "==================================================="
+echo "SIMULACIÓN CLÍNICA HDR - APLICADOR GINECOLÓGICO"
+echo "==================================================="
+echo "Geometría:"
+echo "  🏥 Paciente anatómico (pelvis femenina)"
+echo "  🔧 Aplicador ring + tandem"
+echo "  🎯 Target: Tumor cervical"
+echo "  ⚠️  OARs: Vejiga, recto, intestino"
+echo ""
+echo "Protocolo clínico: 3 fracciones × 7 Gy"
+echo "==================================================="
+
+# Configurar scoring para DVH
+/score/create/boxMesh clinical_mesh
+/score/mesh/boxSize 20 20 15 cm
+/score/mesh/nBin 40 40 30
+/score/mesh/translate/xyz 0 0 0 cm
+/score/quantity/energyDeposit eDep
+/score/quantity/doseDeposit dose
+/score/close
+
+# Simular múltiples posiciones de source dwell
+echo "📍 Simulando posiciones de tratamiento..."
+echo "Posición 1: Tandem tip (+30mm)"
+/gun/position 0 0 30 mm
+/run/beamOn 3000
+
+echo "Posición 2: Tandem medio (0mm)"
+/gun/position 0 0 0 mm
+/run/beamOn 3000
+
+echo "Posición 3: Ring ovoid izquierdo (-15mm, +15mm)"
+/gun/position -15 15 0 mm
+/run/beamOn 2000
+
+echo "Posición 4: Ring ovoid derecho (+15mm, +15mm)"
+/gun/position 15 15 0 mm
+/run/beamOn 2000
+
+# Exportar datos para análisis clínico
+/score/dumpQuantityToFile clinical_mesh eDep clinical_dose_map.txt
+/score/dumpQuantityToFile clinical_mesh dose clinical_dose_physical.txt
+
+echo ""
+echo "✅ SIMULACIÓN CLÍNICA COMPLETADA"
+echo "📊 Datos exportados para análisis DVH"
+echo "📁 Archivos generados:"
+echo "  - clinical_dose_map.txt"
+echo "  - clinical_dose_physical.txt"
+echo ""
+echo "🏥 Análisis recomendado:"
+echo "  - DVH para PTV (Planning Target Volume)"
+echo "  - Constrains para OARs"
+echo "  - Optimización de tiempos de parada"

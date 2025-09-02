@@ -1,0 +1,41 @@
+# Macro simple y funcional para visualización HDR
+# Secuencia correcta para evitar errores
+
+# Paso 1: Inicializar el detector (OBLIGATORIO PRIMERO)
+/run/initialize
+
+# Paso 2: Configurar visualización
+/vis/open OGL 800x600-0+0
+/vis/viewer/set/autoRefresh false
+/vis/verbose errors
+
+# Paso 3: Dibujar la geometría
+/vis/drawVolume
+
+# Paso 4: Configurar vista
+/vis/viewer/set/viewpointVector -1 0 0
+/vis/viewer/set/lightsVector -1 0 0
+/vis/viewer/set/upVector 0 0 1
+/vis/viewer/zoom 2.0
+/vis/viewer/set/style wireframe
+
+# Paso 5: Configurar trayectorias
+/vis/scene/add/trajectories smooth
+/vis/modeling/trajectories/create/drawByParticleID
+/vis/modeling/trajectories/drawByParticleID-0/set gamma blue
+/vis/modeling/trajectories/drawByParticleID-0/set e- red
+/vis/modeling/trajectories/drawByParticleID-0/set e+ green
+
+# Paso 6: Activar auto-refresh
+/vis/viewer/set/autoRefresh true
+/vis/verbose warnings
+
+# Información para el usuario
+echo "==================================="
+echo "HDR Brachytherapy Simulation Ready"
+echo "==================================="
+echo "Comandos útiles:"
+echo "/run/beamOn 10     - Ejecutar 10 eventos"
+echo "/vis/viewer/zoom 3 - Hacer zoom"
+echo "/vis/viewer/refresh - Actualizar"
+echo "==================================="

@@ -1,0 +1,24 @@
+# TG-43 Validation Macro for HDR Brachytherapy
+# Complete simulation setup for Ir-192 source in water phantom
+
+# Set verbose levels
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+/control/verbose 0
+
+# Initialize the run
+/run/initialize
+
+# Set production cuts for accurate low-energy physics
+/run/setCut 0.05 mm gamma
+/run/setCut 0.05 mm e-
+/run/setCut 0.05 mm e+
+/run/setCut 0.1 mm proton
+
+# Particle gun settings (if needed for manual testing)
+/gun/particle gamma
+/gun/energy 316.51 keV
+
+# Run simulation with good statistics for TG-43 validation
+/run/beamOn 10000
