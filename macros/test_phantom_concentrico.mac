@@ -1,0 +1,10 @@
+# Macro para probar la nueva geometría concéntrica al fantoma
+
+# Habilitar heterogeneidades 
+/phantom/enableHeterogeneities true
+/phantom/setHeterogeneityType bone
+
+# Inicializar para construir la geometría
+/run/initialize
+
+# Mostrar información de la geometría construida

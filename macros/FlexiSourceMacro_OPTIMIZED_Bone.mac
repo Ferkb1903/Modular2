@@ -1,0 +1,59 @@
+# ===================================================================
+# MACRO OPTIMIZADO - CONFIGURACIÓN CONSERVADORA (99% ENERGÍA)  
+# ===================================================================
+#
+# Optimización basada en análisis geométrico:
+# - Reducción del mesh de 32×32 cm a 25×25 cm
+# - Reducción de bins de 320×320 a 250×250
+# - Speedup esperado: ~1.6x manteniendo 99% de la energía
+# - Resolución mantenida: 1 mm/voxel
+#
+# Configuración para heterogeneidad con hueso
+# Autor: Equipo de Física Médica
+# Fecha: Septiembre 2024
+# ===================================================================
+
+# Configurar multithreading
+/run/numberOfThreads 14
+/run/printProgress 200000
+
+# Configurar phantom heterogéneo con hueso
+/phantom/enableHeterogeneities true
+/phantom/setHeterogeneityType bone
+
+# Inicializar geometría y física
+/run/initialize
+
+# Seleccionar fuente Flexi
+/source/switch Flexi
+
+# Configurar geometría
+/run/geometryModified
+
+# Ejecutar macro de configuración de partículas primarias
+/control/execute ../macros/iridium_source_primary.mac
+
+# Create scoring mesh OPTIMIZADO (99% energía, conservador)
+/score/create/boxMesh boxMesh_OPTIMIZED_Bone
+/score/mesh/boxSize 12.5 12.5 0.0125 cm
+/score/mesh/nBin 250 250 1
+/score/quantity/energyDeposit eDep
+/score/close
+/score/list
+
+# Configurar progreso
+/run/printProgress 200000
+
+# Actualizar geometría y física
+/run/geometryModified
+/run/physicsModified
+
+# Ejecutar simulación optimizada (5M eventos)
+/run/beamOn 5000000
+
+# Exportar datos
+# ORIGINAL: # ORIGINAL: /score/dumpQuantityToFile boxMesh_OPTIMIZED_Bone eDep ../output/EnergyDeposition_OPTIMIZED_Bone.out
+# ==> CONVERTIDO A ROOT OUTPUT:
+/score/dumpQuantityToFile ORIGINAL: /score/dumpQuantityToFile boxMesh_OPTIMIZED_Bone
+# ==> CONVERTIDO A ROOT OUTPUT:
+/score/dumpQuantityToFile boxMesh_OPTIMIZED_Bone eDep ../output/EnergyDeposition_OPTIMIZED_Bone.root

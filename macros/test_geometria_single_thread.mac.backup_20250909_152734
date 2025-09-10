@@ -1,0 +1,34 @@
+#################################################################
+# MACRO DE PRUEBA - GEOMETRÍA OPTIMIZADA - SINGLE THREAD
+# Fecha: 2024-09-08
+# Objetivo: Verificar funcionamiento con 1 thread
+#################################################################
+
+# Configuración básica (1 thread)
+/run/numberOfThreads 1
+
+# Inicialización
+/run/initialize
+
+# Configuración de la fuente radiactiva
+/control/execute /home/fer/fer/brachytherapy/macros/iridium_source_primary.mac
+
+# Configuración del detector (hueso)
+/det/setMat G4_BONE_CORTICAL_ICRP
+
+# Scoring mesh - configuración mínima
+/score/create/boxMesh boxMesh_1T
+/score/mesh/boxSize 9. 9. 9. cm
+/score/mesh/nBin 12 12 12
+/score/mesh/translate/xyz 0. 0. 0. cm
+/score/quantity/energyDeposit eDep
+
+# Eventos de prueba
+/run/beamOn 5000
+
+# Dump de resultados
+# ORIGINAL: /score/dumpQuantityToFile boxMesh_1T eDep EnergyDeposition_SINGLE_THREAD.out
+# ==> CONVERTIDO A ROOT OUTPUT:
+/score/dumpQuantityToFile boxMesh_1T eDep EnergyDeposition_SINGLE_THREAD.root
+
+# Fin de simulación

@@ -1,0 +1,77 @@
+# ===================================================================
+# MACRO OPTIMIZADO PARA PHANTOM DE AGUA PURA (REFERENCIA)
+# ===================================================================
+# 
+# 🎯 CONFIGURACIÓN SEGURA OPTIMIZADA:
+#    • Phantom: 18×18×18 cm (vs 30×30×30 original)
+#    • Solo agua homogénea (referencia para comparación)
+#    • Reducción tiempo simulación: ~4.6x
+#    • Física preservada con geometría eficiente
+#
+# Autor: Equipo de Física Médica
+# Fecha: Septiembre 2024
+# ===================================================================
+
+/control/verbose 0
+/tracking/verbose 0
+/run/verbose 0
+/event/verbose 0
+
+# ===================================================================
+# CONFIGURACIÓN DEL DETECTOR OPTIMIZADA
+# ===================================================================
+
+# Configurar el tipo de fuente y detector
+/brachy/det/setSourceType TG186
+
+# ===================================================================
+# CONFIGURACIÓN DE MATERIALES OPTIMIZADA
+# ===================================================================
+# Mantener todo como agua (material por defecto)
+# No se ejecuta comando de cambio de material
+
+# ===================================================================
+# CONFIGURACIÓN DE GEOMETRÍA OPTIMIZADA
+# ===================================================================
+
+# 🏗️ PHANTOM OPTIMIZADO CON DISTANCIA SEGURA (18×18×18 cm)
+/brachy/det/setPhantomSizeX 9.0 cm   # Radio = 9 cm → Diámetro = 18 cm
+/brachy/det/setPhantomSizeY 9.0 cm
+/brachy/det/setPhantomSizeZ 9.0 cm
+
+# 📦 SIN HETEROGENEIDAD (phantom homogéneo de agua)
+# No se ejecutan comandos de heterogeneidad
+
+# ===================================================================
+# CONFIGURACIÓN DE FÍSICA
+# ===================================================================
+/brachy/phys/addPhysics emlivermore
+
+# ===================================================================
+# CONFIGURACIÓN DE SCORING OPTIMIZADA
+# ===================================================================
+
+# 📊 SCORING MESH OPTIMIZADO (20×20 cm cubriendo toda la región de interés)
+/score/create/boxMesh boxMesh_1
+/score/mesh/boxSize 10. 10. 0.025 cm     # ±10 cm (vs ±16 cm original)
+/score/mesh/nBin 100 100 1               # 100×100×1 bins (vs 320×320×1 original)
+/score/mesh/translate/xyz 0. 0. 0. cm
+
+# Configurar scorer de deposición de energía
+/score/quantity/energyDeposit eDep
+
+# ===================================================================
+# CONFIGURACIÓN DE SIMULACIÓN
+# ===================================================================
+
+# 🔬 NÚMERO DE EVENTOS (ajustable según necesidades)
+# Para pruebas rápidas: 1M eventos
+# Para producción: 10M eventos
+/run/beamOn 10000000
+
+# ===================================================================
+# SALIDA DE RESULTADOS OPTIMIZADA
+# ===================================================================
+# ORIGINAL: /score/dumpQuantityToFile boxMesh_1 eDep EnergyDeposition_SAFE_Water.out
+# ==> CONVERTIDO A ROOT OUTPUT:
+/score/dumpQuantityToFile boxMesh_1 eDep EnergyDeposition_SAFE_Water.root

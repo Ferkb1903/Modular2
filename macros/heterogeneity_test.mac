@@ -1,0 +1,46 @@
+# Macro para probar braquiterapia con heterogeneidades
+# Comparación con TG-43
+
+/run/initialize
+/control/verbose 1
+/tracking/verbose 0
+/run/verbose 0
+/event/verbose 0
+
+# Configurar la fuente TG186 (fuente genérica de Ir-192)
+/source/switch TG186
+
+# Configurar scoring mesh para calcular dosis
+/score/create/boxMesh doseDistribution
+/score/mesh/boxSize 15. 15. 15. cm
+/score/mesh/nBin 60 60 60
+/score/mesh/translate/xyz 0. 0. 0. cm
+
+# Configurar dose scoring  
+/score/quantity/doseDeposit doseDeposit
+/score/close
+
+# Configurar visualización
+/vis/open OGL 600x600-0+0
+/vis/drawVolume
+/vis/viewer/set/viewpointThetaPhi 90. 180.
+/vis/viewer/zoom 5.
+/vis/scene/add/trajectories smooth
+/vis/modeling/trajectories/create/drawByCharge
+/vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts true
+/vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 2
+
+# Configurar generación de partículas
+/control/verbose 2
+/tracking/verbose 0
+/run/verbose 1
+
+# Ejecutar simulación
+/run/beamOn 1000
+
+# Guardar resultados
+# ORIGINAL: # ORIGINAL: /score/dumpQuantityToFile doseDistribution doseDeposit heterogeneity_dose.out
+# ==> CONVERTIDO A ROOT OUTPUT:
+/score/dumpQuantityToFile ORIGINAL: /score/dumpQuantityToFile doseDistribution
+# ==> CONVERTIDO A ROOT OUTPUT:
+/score/dumpQuantityToFile doseDistribution doseDeposit heterogeneity_dose.root

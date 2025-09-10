@@ -1,0 +1,59 @@
+# =================================================================== 
+# MACRO OPTIMIZADO - CONFIGURACIÓN EQUILIBRADA (95% ENERGÍA)
+# ===================================================================
+#
+# Optimización basada en análisis geométrico:
+# - Reducción del mesh de 32×32 cm a 7×7 cm
+# - Reducción de bins de 320×320 a 70×70
+# - Speedup esperado: ~21x manteniendo 95% de la energía
+# - Resolución mantenida: 1 mm/voxel
+#
+# Configuración para heterogeneidad con tejido adiposo
+# Autor: Equipo de Física Médica
+# Fecha: Septiembre 2024
+# ===================================================================
+
+# Configurar multithreading
+/run/numberOfThreads 14
+/run/printProgress 100000
+
+# Configurar phantom heterogéneo con tejido adiposo
+/phantom/enableHeterogeneities true
+/phantom/setHeterogeneityType fat
+
+# Inicializar geometría y física
+/run/initialize
+
+# Seleccionar fuente Flexi
+/source/switch Flexi
+
+# Configurar geometría
+/run/geometryModified
+
+# Ejecutar macro de configuración de partículas primarias
+/control/execute ../macros/iridium_source_primary.mac
+
+# Create scoring mesh OPTIMIZADO (95% energía, 21x más rápido)
+/score/create/boxMesh boxMesh_OPTIMIZED_Fat
+/score/mesh/boxSize 3.5 3.5 0.0125 cm
+/score/mesh/nBin 70 70 1
+/score/quantity/energyDeposit eDep
+/score/close
+/score/list
+
+# Configurar progreso para simulación más corta
+/run/printProgress 100000
+
+# Actualizar geometría y física
+/run/geometryModified
+/run/physicsModified
+
+# Ejecutar simulación optimizada (1M eventos para prueba rápida)
+/run/beamOn 1000000
+
+# Exportar datos
+# ORIGINAL: # ORIGINAL: /score/dumpQuantityToFile boxMesh_OPTIMIZED_Fat eDep ../output/EnergyDeposition_OPTIMIZED_Fat.out
+# ==> CONVERTIDO A ROOT OUTPUT:
+/score/dumpQuantityToFile ORIGINAL: /score/dumpQuantityToFile boxMesh_OPTIMIZED_Fat
+# ==> CONVERTIDO A ROOT OUTPUT:
+/score/dumpQuantityToFile boxMesh_OPTIMIZED_Fat eDep ../output/EnergyDeposition_OPTIMIZED_Fat.root

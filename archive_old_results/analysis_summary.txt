@@ -1,0 +1,54 @@
+🎯 BRACHYTHERAPY HIGH STATISTICS SIMULATION - RESULTS SUMMARY
+================================================================
+
+📊 SIMULATION PARAMETERS:
+- Events: 2,000,000 (20x increase from baseline)
+- Multithreading: 8 cores (797.5% CPU efficiency)
+- Execution time: 63.7s real / 507.7s CPU
+- Speedup factor: 7.9x from parallelization
+
+🔧 TECHNICAL IMPROVEMENTS IMPLEMENTED:
+- Fixed hardcoded voxelWidth bug in BrachyUserScoreWriter.cc
+- Dynamic coordinate calculation using mesh parameters
+- Expanded mesh coverage from ±100mm to ±160mm
+- Corrected multithreading initialization order
+
+📈 DATA CAPTURE IMPROVEMENTS:
+- Original simulation: 5,994 voxels with energy deposition
+- High statistics: 12,011 voxels with energy deposition
+- Improvement factor: 2.00x data capture
+- Spatial coverage: 317mm × 319mm (vs phantom 300mm × 300mm)
+
+🎯 SPATIAL COVERAGE ACHIEVED:
+- X-axis range: -159.5 → +157.5 mm (317mm total)
+- Y-axis range: -159.5 → +159.5 mm (319mm total)
+- Edge detection: 360+ voxels beyond ±140mm threshold
+- FULL phantom coverage confirmed ✅
+
+🚀 PERFORMANCE METRICS:
+- 20x more events processed
+- 2x more spatial data captured
+- 8x parallel processing efficiency
+- Sub-60ms per 1000 events processing rate
+
+💡 KEY DISCOVERIES:
+1. Hardcoded values were truncating coordinate output to ±25mm
+2. Mesh expansion enabled full phantom coverage (±150mm)
+3. High statistics revealed radiation reach to phantom edges
+4. Multithreading scales linearly with available cores
+
+✅ VALIDATION:
+- Coordinate system: CORRECTED ✅
+- Mesh coverage: FULL PHANTOM ✅
+- Radiation field: COMPLETE MAPPING ✅
+- Performance: OPTIMIZED ✅
+
+📁 OUTPUT FILES:
+- EnergyDeposition_HighStats.out (405,962 bytes, 12,011 data points)
+- brachytherapy.root (278,568 bytes)
+- primary.root (32,324 bytes)
+
+🏆 CONCLUSION:
+The high statistics simulation successfully demonstrates the full extent of 
+the radiation field, capturing energy deposition throughout the entire 
+phantom geometry with unprecedented detail and computational efficiency.

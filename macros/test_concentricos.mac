@@ -1,0 +1,15 @@
+# Macro para probar las heterogeneidades concéntricas sin visualización
+
+# Habilitar heterogeneidades 
+/phantom/enableHeterogeneities true
+/phantom/setHeterogeneityType bone
+
+# Configurar las partículas
+/gun/particle gamma
+/gun/energy 380 keV
+
+# Ejecutar una simulación corta
+/run/beamOn 100
+
+# Confirmar construcción exitosa
+/control/cout "Simulación completada con cubos concéntricos"

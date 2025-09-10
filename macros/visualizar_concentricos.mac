@@ -1,0 +1,27 @@
+# Macro simplificado para visualizar las heterogeneidades como cubos concéntricos
+
+# Habilitar heterogeneidades 
+/phantom/enableHeterogeneities true
+/phantom/setHeterogeneityType bone
+
+# Configuración de visualización
+/vis/open OGL 600x600-0+0
+/vis/drawVolume
+/vis/viewer/set/autoRefresh false
+/vis/verbose errors
+
+# Configurar el punto de vista para ver mejor las heterogeneidades
+/vis/viewer/set/viewpointVector -1 -1 -1
+/vis/viewer/set/lightsVector -1 0 0
+
+# Mostrar solo las superficies
+/vis/viewer/set/style surface
+/vis/viewer/set/hiddenMarker true
+/vis/viewer/set/hiddenEdge true
+
+# Zoom para centrarse en las heterogeneidades
+/vis/viewer/zoom 2.5
+
+# Refrescar la vista
+/vis/viewer/set/autoRefresh true
+/vis/viewer/refresh

@@ -1,0 +1,27 @@
+{
+    "files.associations": {
+        "compare_heterogeneity_TG43.C": "cpp",
+        "analyze_heterogeneity.C": "cpp",
+        "analyze_heterogeneity_filtered.C": "cpp",
+        "analyze_5M_events.C": "cpp",
+        "analyze_fat_vs_bone.C": "cpp",
+        "simple_fat_vs_bone.C": "cpp",
+        "debug_geometry.C": "cpp",
+        "analyze_axis_comparison.C": "cpp",
+        "analyze_axis_comparison_fixed.C": "cpp",
+        "compare_bone_vs_fat_controlled.C": "cpp",
+        "analyze_spatial_distribution.C": "cpp",
+        "improved_axis_comparison.C": "cpp",
+        "compare_homogeneous_vs_heterogeneous.C": "cpp",
+        "compare_corrected.C": "cpp",
+        "detailed_comparison.C": "cpp",
+        "compare_bone_vs_water.C": "cpp",
+        "detailed_bone_comparison.C": "cpp",
+        "analyze_bone_region_only.C": "cpp",
+        "analyze_fat_region_only.C": "cpp",
+        "explain_units.C": "cpp",
+        "data_3d_to_2d_strategies.C": "cpp",
+        "explain_data_extraction.C": "cpp",
+        "explain_coordinate_limits.C": "cpp"
+    }
+}

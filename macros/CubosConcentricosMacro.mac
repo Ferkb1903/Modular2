@@ -1,0 +1,48 @@
+# Macro para visualizar las heterogeneidades como cubos concéntricos
+# Configuración del detector para TG186
+/phantom/selectBrachytherapySource TG186
+
+# Habilitar heterogeneidades 
+/phantom/enableHeterogeneities true
+/phantom/setHeterogeneityType bone
+
+# Configuración de visualización
+/vis/open OGL 600x600-0+0
+/vis/drawVolume
+/vis/viewer/set/autoRefresh false
+/vis/verbose errors
+
+# Configurar el punto de vista para ver mejor las heterogeneidades
+/vis/viewer/set/viewpointVector -1 -1 -1
+/vis/viewer/set/lightsVector -1 0 0
+
+# Mostrar solo las superficies
+/vis/viewer/set/style surface
+/vis/viewer/set/hiddenMarker true
+/vis/viewer/set/hiddenEdge true
+
+# Configurar transparencia para mejor visualización
+/vis/geometry/set/colour Phantom 0 0 0 1 0.1
+/vis/geometry/set/colour World 0 0 0 1 0.0
+
+# Zoom para centrarse en las heterogeneidades
+/vis/viewer/zoom 2.0
+
+# Configurar trayectorias de partículas (opcional)
+/vis/scene/add/trajectories smooth
+/vis/modeling/trajectories/create/drawByCharge
+/vis/modeling/trajectories/drawByCharge-0/set 1 blue
+/vis/modeling/trajectories/drawByCharge-0/set -1 red
+/vis/modeling/trajectories/drawByCharge-0/set 0 green
+
+# Configurar fuente de partículas
+/gun/particle gamma
+/gun/energy 380 keV
+
+# Ejecutar algunas partículas para ver las trayectorias
+/vis/scene/endOfEventAction accumulate 100
+/run/beamOn 50
+
+# Refrescar la vista
+/vis/viewer/set/autoRefresh true
+/vis/viewer/refresh

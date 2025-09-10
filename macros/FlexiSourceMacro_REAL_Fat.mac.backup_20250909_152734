@@ -1,0 +1,79 @@
+# ===================================================================
+# MACRO REALISTA PARA HETEROGENEIDAD DE GRASA
+# ===================================================================
+# 
+# 🎯 CONFIGURACIÓN USANDO COMANDOS DISPONIBLES:
+#    • Geometría: Hard-coded en el código (no modificable por macro)
+#    • Material phantom: Configurable via /phantom/selectMaterial
+#    • Heterogeneidades: Configurables via /phantom/enableHeterogeneities
+#    • Tipo heterogeneidad: bone, muscle, fat, lung
+#
+# 📏 GEOMETRÍA FIJA (definida en código):
+#    • Tamaño exacto depende de la implementación
+#    • Scoring mesh debe ajustarse a geometría real
+#
+# Autor: Equipo de Física Médica
+# Fecha: Septiembre 2024
+# ===================================================================
+
+/control/verbose 0
+/tracking/verbose 0
+/run/verbose 0
+/event/verbose 0
+
+# ===================================================================
+# CONFIGURACIÓN DEL DETECTOR
+# ===================================================================
+
+# Seleccionar fuente TG186 (Ir-192)
+/source/switch TG186
+
+# ===================================================================
+# CONFIGURACIÓN DE MATERIALES
+# ===================================================================
+
+# Mantener phantom como agua (material por defecto)
+# /phantom/selectMaterial G4_WATER
+
+# Habilitar heterogeneidades
+/phantom/enableHeterogeneities true
+
+# Configurar heterogeneidad como grasa (adipose tissue)
+/phantom/setHeterogeneityType fat
+
+# ===================================================================
+# CONFIGURACIÓN DE FÍSICA
+# ===================================================================
+/testem/phys/addPhysics emlivermore
+
+# ===================================================================
+# CONFIGURACIÓN DE SCORING 
+# ===================================================================
+# NOTA: El tamaño debe ajustarse a la geometría real del phantom
+# Usamos el mismo tamaño que para hueso para comparación directa
+
+# Crear scoring mesh centrado en el origen
+/score/create/boxMesh boxMesh_1
+
+# Tamaño ajustado a la geometría real del phantom (30×30×30 cm total)
+# Phantom radio = 15 cm, usamos ±14 cm para estar dentro
+/score/mesh/boxSize 14. 14. 0.025 cm
+/score/mesh/nBin 140 140 1
+/score/mesh/translate/xyz 0. 0. 0. cm
+
+# Configurar scorer de deposición de energía
+/score/quantity/energyDeposit eDep
+
+# ===================================================================
+# CONFIGURACIÓN DE SIMULACIÓN
+# ===================================================================
+
+# Número de eventos para prueba inicial (reducido para testing)
+/run/beamOn 100000
+
+# ===================================================================
+# SALIDA DE RESULTADOS
+# ===================================================================
+# ORIGINAL: /score/dumpQuantityToFile boxMesh_1 eDep EnergyDeposition_REAL_Fat.out
+# ==> CONVERTIDO A ROOT OUTPUT:
+/score/dumpQuantityToFile boxMesh_1 eDep EnergyDeposition_REAL_Fat.root

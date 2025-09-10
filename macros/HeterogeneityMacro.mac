@@ -1,0 +1,46 @@
+# Macro para demostrar heterogeneidades en braquioterapia
+# Comparación con TG-43
+
+# Configurar la fuente
+/source/switch TG186
+
+# Habilitar heterogeneidades
+/phantom/enableHeterogeneities true
+
+# Configurar el tipo de heterogeneidad (opciones: bone, muscle, fat, lung)
+/phantom/setHeterogeneityType bone
+
+# Configurar scoring para comparar con TG-43
+/score/create/boxMesh doseDistribution
+/score/mesh/boxSize 15. 15. 15. cm
+/score/mesh/nBin 30 30 30
+/score/mesh/translate/xyz 0. 0. 0. cm
+
+# Configurar dose scoring
+/score/quantity/doseDeposit doseDeposit
+/score/close
+
+# Configurar visualización
+/vis/open OGL 600x600-0+0
+/vis/drawVolume
+/vis/scene/add/trajectories smooth
+/vis/scene/endOfEventAction accumulate
+
+# Configurar generación de partículas
+/control/verbose 2
+/run/verbose 2
+/event/verbose 0
+/tracking/verbose 0
+
+# Ejecutar simulación
+/run/beamOn 100
+
+# Guardar resultados para comparación con TG-43
+#/score/dumpQuantityToFile doseDistribution doseDeposit dose_with_heterogeneities.txt
+
+# Ejecutar sin heterogeneidades para comparación
+#/phantom/enableHeterogeneities false
+#/run/beamOn 100
+#/score/dumpQuantityToFile doseDistribution doseDeposit dose_homogeneous.txt
+
+#/score/close

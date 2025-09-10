@@ -1,0 +1,34 @@
+# Simulación de braquiterapia con heterogeneidades
+# Comparación con TG-43 usando comandos UI implementados
+
+/run/initialize
+
+# Configurar la fuente TG186 (fuente genérica de Ir-192)
+/source/switch TG186
+
+# Habilitar heterogeneidades usando el comando UI
+/phantom/enableHeterogeneities true
+
+# Configurar el tipo de heterogeneidad (bone, muscle, fat, lung)
+/phantom/setHeterogeneityType bone
+
+# Configurar scoring mesh para calcular dosis
+/score/create/boxMesh doseDistribution
+/score/mesh/boxSize 15. 15. 15. cm
+/score/mesh/nBin 30 30 30
+/score/mesh/translate/xyz 0. 0. 0. cm
+
+# Configurar dose scoring
+/score/quantity/doseDeposit doseDeposit
+/score/close
+
+# Configurar generación de partículas primarias
+/control/execute iridium_source_primary.mac
+
+# Ejecutar simulación
+/run/beamOn 1000
+
+# Guardar resultados de dosis
+# ORIGINAL: /score/dumpQuantityToFile doseDistribution doseDeposit heterogeneity_dose_bone.out
+# ==> CONVERTIDO A ROOT OUTPUT:
+/score/dumpQuantityToFile doseDistribution doseDeposit heterogeneity_dose_bone.root

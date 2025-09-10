@@ -1,0 +1,24 @@
+=== REPORTE DE ANÁLISIS DE DEPOSICIÓN DE ENERGÍA ===
+
+Archivo analizado: EnergyDeposition_REF_Bone_Heterogeneous10M.out
+Fecha de análisis: 2025-09-09 15:19:08.629248
+
+ESTADÍSTICAS BÁSICAS:
+Forma de los datos: (32346, 4)
+Estadísticas descriptivas:
+                  x             y        z        energy
+count  32346.000000  32346.000000  32346.0  3.234600e+04
+mean      -0.016602     -0.038335      0.0  1.876227e+04
+std       51.908045     51.903482      0.0  1.355380e+06
+min      -89.500000    -89.500000      0.0  2.664623e-01
+25%      -44.500000    -44.500000      0.0  4.087345e+02
+50%       -0.500000     -0.500000      0.0  8.282048e+02
+75%       44.500000     44.500000      0.0  1.977285e+03
+max       89.500000     89.500000      0.0  1.222305e+08
+
+ANÁLISIS DE ENERGÍA:
+Energía total depositada: 606884283.119346
+Energía promedio: 18762.266837
+Energía máxima: 122230512.493529
+Energía mínima: 0.266462
+Desviación estándar: 1355379.818410

@@ -1,0 +1,73 @@
+# ===================================================================
+# MACRO REALISTA PARA PHANTOM DE AGUA PURA (REFERENCIA)
+# ===================================================================
+# 
+# 🎯 CONFIGURACIÓN DE REFERENCIA:
+#    • Phantom homogéneo de agua
+#    • Sin heterogeneidades
+#    • Geometría idéntica para comparación directa
+#
+# Autor: Equipo de Física Médica
+# Fecha: Septiembre 2024
+# ===================================================================
+
+/control/verbose 0
+/tracking/verbose 0
+/run/verbose 0
+/event/verbose 0
+
+# ===================================================================
+# CONFIGURACIÓN DEL DETECTOR
+# ===================================================================
+
+# Seleccionar fuente TG186 (Ir-192)
+/source/switch TG186
+
+# ===================================================================
+# CONFIGURACIÓN DE MATERIALES
+# ===================================================================
+
+# Mantener phantom como agua (material por defecto)
+# /phantom/selectMaterial G4_WATER
+
+# Deshabilitar heterogeneidades (phantom homogéneo)
+/phantom/enableHeterogeneities false
+
+# ===================================================================
+# CONFIGURACIÓN DE FÍSICA
+# ===================================================================
+/testem/phys/addPhysics emlivermore
+
+# ===================================================================
+# CONFIGURACIÓN DE SCORING 
+# ===================================================================
+# Usar exactamente el mismo scoring que heterogeneidades para comparación
+
+# Crear scoring mesh centrado en el origen
+/score/create/boxMesh boxMesh_1
+
+# Tamaño ajustado a la geometría real del phantom (30×30×30 cm total)
+# Phantom radio = 15 cm, usamos ±14 cm para estar dentro
+/score/mesh/boxSize 14. 14. 0.025 cm
+/score/mesh/nBin 140 140 1
+/score/mesh/translate/xyz 0. 0. 0. cm
+
+# Configurar scorer de deposición de energía
+/score/quantity/energyDeposit eDep
+
+# ===================================================================
+# CONFIGURACIÓN DE SIMULACIÓN
+# ===================================================================
+
+# Inicializar el kernel de Geant4
+/run/initialize
+
+# Número de eventos para prueba inicial (reducido para testing)
+/run/beamOn 100000
+
+# ===================================================================
+# SALIDA DE RESULTADOS
+# ===================================================================
+# ORIGINAL: /score/dumpQuantityToFile boxMesh_1 eDep EnergyDeposition_REAL_Water.out
+# ==> CONVERTIDO A ROOT OUTPUT:
+/score/dumpQuantityToFile boxMesh_1 eDep EnergyDeposition_REAL_Water.root
