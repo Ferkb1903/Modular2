@@ -1,0 +1,123 @@
+# Macro de demostración visual avanzada - Todas las geometrías
+# Para visualización interactiva de diferentes escenarios
+
+# Inicializar geometría
+/run/initialize
+
+# Configurar visualización avanzada
+/vis/open OGLSQt 1000x800-0+0
+/vis/drawVolume
+
+# Configurar vista óptima para mostrar heterogeneidades
+/vis/viewer/set/viewpointVector -1 -1 -0.5
+/vis/viewer/set/lightsVector -1 0 0
+/vis/viewer/set/upVector 0 0 1
+/vis/viewer/zoom 2
+
+# Configurar estilo para ver materiales diferentes
+/vis/viewer/set/style surface
+/vis/viewer/set/hiddenMarker true
+/vis/viewer/set/auxiliaryEdge true
+
+# Hacer volúmenes semi-transparentes para ver estructura interna
+/vis/geometry/set/visibility World 0 false
+/vis/geometry/set/colour WaterPhantom 0 0.7 0.9 1.0 0.3
+
+# Resaltar diferentes materiales
+/vis/geometry/set/colour BoneCortical 0 1.0 1.0 0.8 0.8    # Hueso: amarillo
+/vis/geometry/set/colour AirCavity 0 0.9 0.9 0.9 0.1       # Aire: gris transparente
+/vis/geometry/set/colour Muscle 0 0.8 0.4 0.4 0.6          # Músculo: rojo
+/vis/geometry/set/colour Fat 0 1.0 1.0 0.4 0.5            # Grasa: amarillo claro
+/vis/geometry/set/colour Bladder 0 0.4 0.4 0.8 0.4         # Vejiga: azul
+/vis/geometry/set/colour Rectum 0 0.6 0.3 0.3 0.4          # Recto: marrón
+
+# Resaltar fuente y aplicador
+/vis/geometry/set/colour SourceCore 0 1.0 0.2 0.2 1.0      # Núcleo: rojo brillante
+/vis/geometry/set/colour SourceEncap 0 0.8 0.8 0.8 0.9     # Encapsulado: metálico
+/vis/geometry/set/colour Applicator 0 0.5 0.5 1.0 0.8      # Aplicador: azul metálico
+
+# Configurar trayectorias de partículas
+/vis/scene/add/trajectories smooth
+/vis/modeling/trajectories/create/drawByParticleID
+
+# Colores distintivos para diferentes partículas
+/vis/modeling/trajectories/drawByParticleID-0/set gamma blue
+/vis/modeling/trajectories/drawByParticleID-0/set e- red
+/vis/modeling/trajectories/drawByParticleID-0/set e+ green
+/vis/modeling/trajectories/drawByParticleID-0/set proton yellow
+/vis/modeling/trajectories/drawByParticleID-0/set neutron white
+
+# Configurar pasos de trayectoria visibles
+/vis/modeling/trajectories/drawByParticleID-0/default/setDrawStepPts true
+/vis/modeling/trajectories/drawByParticleID-0/default/setStepPtsSize 2
+
+# Mostrar deposición de energía
+/vis/scene/add/hits
+
+# Información en pantalla
+/vis/set/textColour red
+/vis/set/textLayout right
+/vis/scene/add/text2D 0.02 0.95 24 ! ! "HDR Brachytherapy - Heterogeneous Phantom"
+/vis/scene/add/text2D 0.02 0.90 18 ! ! "Ir-192 Source + Multiple Tissues"
+
+/vis/set/textColour blue  
+/vis/scene/add/text2D 0.02 0.85 16 ! ! "Materials:"
+/vis/scene/add/text2D 0.02 0.80 14 ! ! "  Bone (yellow)"
+/vis/scene/add/text2D 0.02 0.76 14 ! ! "  Air (transparent)"
+/vis/scene/add/text2D 0.02 0.72 14 ! ! "  Muscle (red)"
+/vis/scene/add/text2D 0.02 0.68 14 ! ! "  Fat (light yellow)"
+/vis/scene/add/text2D 0.02 0.64 14 ! ! "  Water (blue)"
+
+/vis/set/textColour green
+/vis/scene/add/text2D 0.02 0.58 16 ! ! "Particles:"
+/vis/scene/add/text2D 0.02 0.54 14 ! ! "  Gamma (blue lines)"
+/vis/scene/add/text2D 0.02 0.50 14 ! ! "  e- (red lines)"
+/vis/scene/add/text2D 0.02 0.46 14 ! ! "  e+ (green lines)"
+
+# Ejes de coordenadas
+/vis/scene/add/axes 0 0 0 20 mm
+
+# Escala de referencia
+/vis/scene/add/scale 30 mm z 1 0 0 manual -40 0 -40 mm
+
+# Activar auto-refresh
+/vis/viewer/set/autoRefresh true
+
+echo "================================================="
+echo "DEMOSTRACIÓN VISUAL INTERACTIVA"
+echo "================================================="
+echo "🎬 Ventana OpenGL abierta con geometría completa"
+echo ""
+echo "🎮 Controles de visualización:"
+echo "  • Mouse: Rotar vista 3D"
+echo "  • Scroll: Zoom in/out"
+echo "  • Ctrl+Mouse: Pan/Desplazar"
+echo ""
+echo "📊 Materiales visibles:"
+echo "  🟡 Hueso cortical (costillas)"
+echo "  ⚪ Cavidades aéreas (pulmón/intestino)" 
+echo "  🔴 Músculo esquelético"
+echo "  🟨 Tejido adiposo"
+echo "  🔵 Vejiga (OAR)"
+echo "  🟤 Recto (OAR)"
+echo "  💧 Agua (fondo)"
+echo ""
+echo "⚡ Comandos de simulación:"
+echo "  /run/beamOn 50      - Ejecutar 50 eventos"
+echo "  /gun/energy 468 keV - Cambiar energía"
+echo "  /vis/viewer/zoom 3  - Hacer zoom"
+echo "================================================="
+
+# Configurar generador para demostración
+/gun/particle gamma
+/gun/energy 317 keV
+/gun/position 0 0 0 mm
+
+# Ejecutar algunos eventos para demostración inicial
+echo "🚀 Ejecutando eventos de demostración..."
+/run/beamOn 20
+
+echo ""
+echo "✅ Demostración lista"
+echo "💡 Ejecuta más eventos para ver interacciones:"
+echo "   /run/beamOn 100"

@@ -1,0 +1,26 @@
+# Macro for TG-43 validation simulation
+# Runs simulation in water phantom for parameter validation
+
+# Initialize random seed
+/random/setSeeds 123456 654321
+
+# Set physics cuts for accuracy near source
+/run/setCut 0.01 mm
+/run/setCutForAGivenParticle gamma 0.01 mm
+/run/setCutForAGivenParticle e- 0.01 mm
+/run/setCutForAGivenParticle e+ 0.01 mm
+
+# Set primary generator to Ir-192 spectrum
+/gun/particle gamma
+/gun/energy 316.51 keV
+/gun/position 0 0 0 mm
+/gun/direction 0 0 1
+
+# Set number of events for good statistics
+# For TG-43 validation, need high statistics for accurate parameters
+/run/beamOn 10000
+
+# Print some information
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0

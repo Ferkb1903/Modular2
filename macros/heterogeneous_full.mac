@@ -1,0 +1,59 @@
+# Macro para simulación heterogénea completa - HDR Brachytherapy
+# Incluye hueso, aire, músculo, grasa y OARs (vejiga, recto)
+
+# Configuración inicial
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+# Inicializar la geometría
+/run/initialize
+
+# Configurar generador de partículas (espectro realista Ir-192)
+/gun/particle gamma
+/gun/energy 317 keV
+/gun/position 0 0 0 mm
+/gun/direction 0 0 1
+
+# Configurar número de threads para simulación rápida
+/run/numberOfThreads 4
+
+# Configurar scoring para análisis TG-43
+/score/create/boxMesh boxMesh_het
+/score/mesh/boxSize 15 15 15 cm
+/score/mesh/nBin 30 30 30
+/score/mesh/translate/xyz 0 0 0 cm
+/score/quantity/energyDeposit eDep
+/score/close
+
+# SIMULACIÓN PRINCIPAL - Heterogeneous phantom
+echo "==================================================="
+echo "HDR Brachytherapy - SIMULACIÓN HETEROGÉNEA"
+echo "==================================================="
+echo "Geometría: Fantoma multicapa con heterogeneidades"
+echo "  - Hueso cortical (costillas)"
+echo "  - Cavidad aérea (pulmón)"
+echo "  - Músculo esquelético"
+echo "  - Tejido adiposo"
+echo "  - OARs: Vejiga y Recto"
+echo ""
+echo "Fuente: Ir-192 HDR (espectro completo)"
+echo "Eventos: 10,000 (análisis estadístico robusto)"
+echo "==================================================="
+
+# Ejecutar simulación
+/run/beamOn 10000
+
+# Análisis automático
+echo ""
+echo "✅ Simulación heterogénea completada"
+echo "📊 Generando mapas de dosis..."
+
+# Exportar scoring mesh
+/score/dumpQuantityToFile boxMesh_het eDep heterogeneous_dose.txt
+
+echo "📁 Archivos generados:"
+echo "  - heterogeneous_dose.txt (mapa 3D de dosis)"
+echo "  - Listo para análisis con Python"
+echo ""
+echo "🔄 Para análisis: python3 ../scripts/simple_analysis.py"

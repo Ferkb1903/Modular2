@@ -1,0 +1,11 @@
+# Simple batch mode macro for TG-43 validation
+# No visualization commands
+
+# Initialize kernel
+/run/initialize
+
+# Set production cuts for accurate physics
+/run/setCut 0.05 mm
+
+# Run simulation with good statistics
+/run/beamOn 5000

@@ -1,0 +1,36 @@
+# Visualization macro for HDR Brachytherapy simulation
+
+# Use this open statement to create an OpenGL view:
+/vis/open OGL
+
+# Draw geometry:
+/vis/drawVolume
+
+# Specify view angle:
+/vis/viewer/set/viewpointThetaPhi 90. 180.
+
+# Specify zoom value:
+/vis/viewer/zoom 2.
+
+# Specify style (surface or wireframe):
+/vis/viewer/set/style surface
+
+# Draw coordinate axes:
+/vis/scene/add/axes 0 0 0 5 cm
+
+# Draw smooth trajectories at end of event:
+/vis/scene/add/trajectories smooth
+
+# To draw only gammas:
+/vis/filtering/trajectories/create/particleFilter
+/vis/filtering/trajectories/particleFilter-0/add gamma
+
+# Set gamma color to green
+/vis/modeling/trajectories/create/drawByParticleID
+/vis/modeling/trajectories/drawByParticleID-0/set gamma green
+
+# Accumulate events 
+/vis/scene/endOfEventAction accumulate
+
+# Create empty detector view
+/vis/viewer/flush

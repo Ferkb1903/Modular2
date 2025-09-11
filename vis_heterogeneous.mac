@@ -1,0 +1,47 @@
+# Macro para visualizar el fantoma heterogéneo
+# HDR Brachytherapy with Ir-192 source
+
+# Inicialización
+/run/initialize
+
+# Configuración de visualización
+/vis/open OGL 800x600-0+0
+/vis/drawVolume
+/vis/viewer/set/autoRefresh false
+/vis/verbose errors
+
+# Configurar vista
+/vis/viewer/set/viewpointVector -1 0 0
+/vis/viewer/set/lightsVector -1 0 0
+/vis/viewer/set/upVector 0 0 1
+/vis/viewer/zoom 1.4
+/vis/viewer/set/style wireframe
+
+# Configurar visualización de trayectorias
+/vis/scene/add/trajectories smooth
+/vis/modeling/trajectories/create/drawByCharge
+/vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts true
+/vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 2
+
+# Colorear por tipo de partícula
+/vis/modeling/trajectories/create/drawByParticleID
+/vis/modeling/trajectories/drawByParticleID-0/set gamma blue
+/vis/modeling/trajectories/drawByParticleID-0/set e- red
+/vis/modeling/trajectories/drawByParticleID-0/set e+ green
+
+# Ejecutar simulación pequeña para visualización
+/tracking/storeTrajectory 2
+/run/beamOn 10
+
+# Actualizar vista
+/vis/viewer/set/autoRefresh true
+/vis/viewer/refresh
+
+# Información del sistema
+/vis/scene/add/text2D 0.1 0.9 24 ! ! "HDR Brachytherapy - Heterogeneous Phantom"
+/vis/scene/add/text2D 0.1 0.85 18 ! ! "Ir-192 Source (yellow)"
+/vis/scene/add/text2D 0.1 0.8 18 ! ! "Muscle (red), Fat (yellow), Bone (white)"
+/vis/scene/add/text2D 0.1 0.75 18 ! ! "Air cavities (blue), Tumor (red)"
+
+# Mantener la ventana abierta
+/vis/viewer/flush

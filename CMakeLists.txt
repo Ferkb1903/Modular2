@@ -63,3 +63,8 @@ endforeach()
 #
 install(TARGETS Brachy DESTINATION bin)
 
+# Create output directories
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/output)
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/output/dose_maps)
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/output/dvh)
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/output/tg43_validation)

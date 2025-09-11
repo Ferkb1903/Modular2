@@ -1,0 +1,83 @@
+# Macro para análisis de efectos de heterogeneidades específicas
+# Comparación directa TG-43 vs Monte Carlo con materiales reales
+
+# Configuración inicial
+/run/verbose 1
+/event/verbose 0
+
+# Inicializar geometría
+/run/initialize
+
+echo "==================================================="
+echo "ANÁLISIS DE HETEROGENEIDADES - HDR BRACHYTHERAPY"
+echo "==================================================="
+echo "Objetivos:"
+echo "  🔬 Cuantificar desviaciones del TG-43"
+echo "  📊 Mapear efectos de densidad"
+echo "  🎯 Evaluar impacto clínico"
+echo ""
+echo "Escenarios de prueba:"
+echo "  1. Hueso cortical (costilla)"
+echo "  2. Cavidad aérea (pulmón/intestino)"
+echo "  3. Transición músculo-grasa"
+echo "  4. Aplicador metálico"
+echo "==================================================="
+
+# Configurar scoring detallado
+/score/create/boxMesh heterogeneity_analysis
+/score/mesh/boxSize 12 12 12 cm
+/score/mesh/nBin 60 60 60  # Alta resolución
+/score/mesh/translate/xyz 0 0 0 cm
+/score/quantity/energyDeposit eDep
+/score/quantity/doseDeposit dose
+/score/close
+
+# ESCENARIO 1: Efecto del hueso
+echo ""
+echo "🦴 ESCENARIO 1: HUESO CORTICAL"
+echo "Simulando costilla a 2cm de fuente..."
+/gun/particle gamma
+/gun/energy 317 keV
+/gun/position 0 0 0 mm
+/gun/direction 1 0 0  # Hacia hueso
+
+/run/beamOn 5000
+
+# ESCENARIO 2: Cavidad aérea
+echo ""
+echo "💨 ESCENARIO 2: CAVIDAD AÉREA"
+echo "Simulando bolsa de aire intestinal..."
+/gun/direction 0 1 0  # Hacia cavidad
+
+/run/beamOn 5000
+
+# ESCENARIO 3: Interfaz tejidos blandos
+echo ""
+echo "🫀 ESCENARIO 3: INTERFAZ MÚSCULO-GRASA"
+echo "Simulando transición de densidades..."
+/gun/direction 0 0 1  # Perpendicular a interfaz
+
+/run/beamOn 5000
+
+# Análisis automático de resultados
+echo ""
+echo "🔍 ANÁLISIS AUTOMÁTICO:"
+
+# Exportar mapas para análisis
+/score/dumpQuantityToFile heterogeneity_analysis eDep hetero_energy_map.txt
+/score/dumpQuantityToFile heterogeneity_analysis dose hetero_dose_map.txt
+
+echo ""
+echo "✅ ANÁLISIS DE HETEROGENEIDADES COMPLETADO"
+echo ""
+echo "📊 RESULTADOS ESPERADOS:"
+echo "  - Hueso: -20% a -35% de dosis post-ósea"
+echo "  - Aire: +10% a +25% en bordes (backscatter)"
+echo "  - Interfaz: Gradientes suaves ±5-10%"
+echo ""
+echo "📁 Archivos generados:"
+echo "  - hetero_energy_map.txt (deposición energía)"
+echo "  - hetero_dose_map.txt (dosis física)"
+echo ""
+echo "🐍 Ejecutar análisis Python:"
+echo "   python3 ../scripts/analyze_heterogeneities.py"

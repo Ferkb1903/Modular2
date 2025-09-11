@@ -2,31 +2,36 @@
 # .gitignore para proyecto de Braquiterapia con Geant4 y Python
 # =================================================================
 
-# --- Archivos de compilación Geant4/C++ ---
+# --- Directorios de compilación ---
 build/
 bin/
 obj/
+output/
+plots/
+
+# --- Archivos compilados ---
 *.o
+*.obj
 *.so
 *.a
 *.dylib
 *.dll
 *.exe
+*.out
 Brachy
+hdr_brachy
+
+# --- CMake ---
 CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake
 Makefile
 
-# --- Archivos ROOT grandes ---
+# --- Archivos ROOT ---
 *.root
 primary_*.root
 *_eDep.root
 brachytherapy*.root
-
-# --- Archivos de salida ASCII ---
-*.out
-EnergyDeposition_*.out
 
 # --- Entornos virtuales Python ---
 venv/
@@ -44,59 +49,33 @@ __pycache__/
 .ipynb_checkpoints/
 *.ipynb
 
-# --- Resultados y figuras generadas ---
-*.png
-*.pdf
-*.jpg
-*.jpeg
-*.eps
-*.svg
-comparison_*.png
-perfil_*.png
-gL_*.png
-MAPA_*.png
-ANALISIS_*.png
-
 # --- Archivos de datos temporales ---
-*.txt
-*.csv
 *.dat
 *.log
+*.tmp
+*.temp
 *_backup_*
 *.backup
-
-# --- Archivos del sistema ---
-.DS_Store
-Thumbs.db
-*.swp
-*.swo
-*~
 
 # --- IDEs y editores ---
 .vscode/
 .idea/
 *.sublime-*
 .vs/
+*.swp
+*.swo
+*~
 
 # --- Archivos específicos del proyecto ---
 archive_old_*/
 History
 flexi_output.log
-energy_analysis_results.txt
-analysis_summary.txt
 
-# --- Git ---
-.git/
-
-# =================================================================
-# MANTENER ESTOS ARCHIVOS IMPORTANTES:
-# =================================================================
-# !src/
-# !include/
-# !macros/
-# !*.mac
-# !*.py
-# !CMakeLists.txt
-# !GNUmakefile
-# !README*
-# !*.md
+# --- Archivos del sistema ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
