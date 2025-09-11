@@ -30,6 +30,7 @@ EnergyDeposition_*.out
 
 # --- Entornos virtuales Python ---
 venv/
+build/venv/
 env/
 .venv/
 .env/
