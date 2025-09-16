@@ -34,6 +34,7 @@
 #include "globals.hh"
 
 class BrachyRunMessenger;
+class BrachySteppingAction;
 class G4Run;
 
 class BrachyRunAction : public G4UserRunAction
@@ -45,6 +46,24 @@ public:
 public:
   void BeginOfRunAction(const G4Run*) override;
   void EndOfRunAction(const G4Run*) override;
+  
+  // Method to set SteppingAction reference for data export
+  void SetSteppingAction(BrachySteppingAction* steppingAction) { fSteppingAction = steppingAction; }
+  
+  // Static methods to get histogram IDs (set during BeginOfRunAction)
+  static G4int GetPrimaryDoseHistoID() { return fPrimaryDoseHistoID; }
+  static G4int GetSecondaryDoseHistoID() { return fSecondaryDoseHistoID; }
+  static G4int GetPrimaryDose2DHistoID() { return fPrimaryDose2DHistoID; }
+  static G4int GetSecondaryDose2DHistoID() { return fSecondaryDose2DHistoID; }
+
+private:
+  BrachySteppingAction* fSteppingAction = nullptr;
+  
+  // Static histogram IDs for primary/secondary dose (1D and 2D)
+  static G4int fPrimaryDoseHistoID;
+  static G4int fSecondaryDoseHistoID;
+  static G4int fPrimaryDose2DHistoID;
+  static G4int fSecondaryDose2DHistoID;
 };
 #endif
 

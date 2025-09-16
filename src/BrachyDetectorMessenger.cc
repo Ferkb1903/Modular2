@@ -39,6 +39,7 @@
 #include "G4UIdirectory.hh"
 #include "G4UIcmdWithAString.hh"
 #include "G4UIcmdWithABool.hh"
+#include "G4UIcmdWith3VectorAndUnit.hh"
 
 BrachyDetectorMessenger::BrachyDetectorMessenger(BrachyDetectorConstruction* detector): fDetector(detector)
 { 
@@ -67,7 +68,19 @@ BrachyDetectorMessenger::BrachyDetectorMessenger(BrachyDetectorConstruction* det
   fHeterogeneityTypeCmd -> SetGuidance("Set the type of heterogeneity material.");
   fHeterogeneityTypeCmd -> SetParameterName("type",false);
   fHeterogeneityTypeCmd -> SetCandidates("bone muscle fat lung");
-  fHeterogeneityTypeCmd -> AvailableForStates(G4State_PreInit,G4State_Idle); 
+  fHeterogeneityTypeCmd -> AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fHeterogeneitySizeCmd = new G4UIcmdWith3VectorAndUnit("/phantom/setHeterogeneitySize",this);
+  fHeterogeneitySizeCmd -> SetGuidance("Set the size (half-dimensions) of heterogeneity cube.");
+  fHeterogeneitySizeCmd -> SetParameterName("sizeX","sizeY","sizeZ",false);
+  fHeterogeneitySizeCmd -> SetDefaultUnit("cm");
+  fHeterogeneitySizeCmd -> AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fHeterogeneityCenterCmd = new G4UIcmdWith3VectorAndUnit("/phantom/setHeterogeneityCenter",this);
+  fHeterogeneityCenterCmd -> SetGuidance("Set the center position of heterogeneity cube.");
+  fHeterogeneityCenterCmd -> SetParameterName("centerX","centerY","centerZ",false);
+  fHeterogeneityCenterCmd -> SetDefaultUnit("cm");
+  fHeterogeneityCenterCmd -> AvailableForStates(G4State_PreInit,G4State_Idle); 
  }
 
 BrachyDetectorMessenger::~BrachyDetectorMessenger()
@@ -76,6 +89,8 @@ BrachyDetectorMessenger::~BrachyDetectorMessenger()
   delete fPhantomMaterialCmd; 
   delete fEnableHeterogeneityCmd;
   delete fHeterogeneityTypeCmd;
+  delete fHeterogeneitySizeCmd;
+  delete fHeterogeneityCenterCmd;
   delete fDetectorDir;
 }
 
@@ -105,5 +120,19 @@ void BrachyDetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue
   // Set heterogeneity type
   if( command == fHeterogeneityTypeCmd )
    { fDetector -> SetHeterogeneityType(newValue);}
+
+  // Set heterogeneity size
+  if( command == fHeterogeneitySizeCmd )
+   { 
+     G4ThreeVector size = fHeterogeneitySizeCmd->GetNew3VectorValue(newValue);
+     fDetector -> SetHeterogeneitySize(size);
+   }
+
+  // Set heterogeneity center
+  if( command == fHeterogeneityCenterCmd )
+   { 
+     G4ThreeVector center = fHeterogeneityCenterCmd->GetNew3VectorValue(newValue);
+     fDetector -> SetHeterogeneityCenter(center);
+   }
 }
 

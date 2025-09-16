@@ -42,6 +42,7 @@ class BrachyDetectorConstruction;
 class G4UIdirectory;
 class G4UIcmdWithAString;
 class G4UIcmdWithABool;
+class G4UIcmdWith3VectorAndUnit;
 
 class BrachyDetectorMessenger: public G4UImessenger
 {
@@ -58,7 +59,9 @@ private:
   G4UIcmdWithAString*          fPhantomMaterialCmd; // change phantom material
   G4UIcmdWithAString*          fSourceCmd; // change brachytherapic source 
   G4UIcmdWithABool*            fEnableHeterogeneityCmd; // enable/disable heterogeneities
-  G4UIcmdWithAString*          fHeterogeneityTypeCmd; // set heterogeneity type 
+  G4UIcmdWithAString*          fHeterogeneityTypeCmd; // set heterogeneity type
+  G4UIcmdWith3VectorAndUnit*   fHeterogeneitySizeCmd; // set heterogeneity size
+  G4UIcmdWith3VectorAndUnit*   fHeterogeneityCenterCmd; // set heterogeneity center 
 };
 #endif
 

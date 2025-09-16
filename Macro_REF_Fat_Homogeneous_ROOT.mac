@@ -1,0 +1,78 @@
+# =================================================================
+# MACRO DE REFERENCIA - PHANTOM HOMOGÉNEO (GRASA) - VERSIÓN ROOT
+# =================================================================
+# 
+# CONFIGURACIÓN GEOMÉTRICA (basada en código fuente):
+# - Phantom: 18×18×18 cm (radio = 9 cm en código)
+# - World: 60×60×60 cm total  
+# - Material: Solo tejido graso (densidad 0.92 g/cm³)
+# - Fuente: Iridio-192 FlexiSource en centro (0,0,0)
+#
+# CONFIGURACIÓN DE MALLA:
+# - Cobertura: 18×18 cm (todo el phantom)
+# - Resolución: 180×180 bins = 0.10 cm/bin = 1.0 mm
+# - Espesor: 0.5 cm para excelente estadística
+#
+# Eventos: 10,000,000 para alta precisión estadística
+# Threads: 14 para máximo rendimiento
+# SALIDA: Archivos ROOT en lugar de ASCII
+# =================================================================
+
+# Configuración básica
+/tracking/verbose 0
+/run/verbose 1
+/event/verbose 0
+
+# Multithreading para máximo rendimiento
+/run/numberOfThreads 14
+
+# ¡IMPORTANTE! Deshabilitar heterogeneidades para phantom homogéneo
+/phantom/enableHeterogeneities false
+
+# Configurar material del phantom como grasa
+/phantom/setPhantomMaterial Fat
+
+# Inicializar geometría y física
+/run/initialize
+
+# Configuración de fuente
+/source/switch Flexi
+/run/geometryModified
+
+# Configuración del espectro de Iridio-192
+/control/execute iridium_source_primary.mac
+
+# ===== CONFIGURACIÓN DE MALLA DE SCORING =====
+# Basada en geometría real del código fuente:
+# - Phantom real: 18×18×18 cm
+# - Malla: 18×18 cm para cubrir todo el phantom
+# - Resolución: 180×180 = 0.10 cm/bin (1.0 mm de precisión)
+# - Grosor Z: 0.5 cm para mejor estadística (40x mejora)
+
+/score/create/boxMesh meshRef_Fat_Homogeneous_ROOT
+/score/mesh/boxSize 9.0 9.0 0.25 cm
+/score/mesh/nBin 180 180 1
+/score/mesh/translate/xyz 0. 0. 0. cm
+/score/quantity/energyDeposit eDep
+/score/close
+
+# Verificar configuración
+/score/list
+
+# Progreso cada 100k eventos
+/run/printProgress 100000
+
+# Ejecutar 10 millones de eventos para alta precisión estadística
+/run/beamOn 10000000
+
+# =================================================================
+# SALIDA EN FORMATO ROOT (AUTOMÁTICA)
+# =================================================================
+# El sistema BrachyUserScoreWriter automáticamente genera:
+# - Archivo único con timestamp para scoring mesh data
+# - primary_TIMESTAMP.root para espectro de energía
+# 
+# Generar archivo ROOT del scoring mesh con timestamp único
+/score/dumpQuantityToFile meshRef_Fat_Homogeneous_ROOT eDep brachytherapy_fat_homogeneous.root
+
+# Fin del macro

@@ -30,14 +30,50 @@
 #define BrachySteppingAction_h 1
 
 #include "G4UserSteppingAction.hh"
+#include "globals.hh"
+#include <vector>
+
+class G4Track; // Forward declaration
 
 class BrachySteppingAction: public G4UserSteppingAction
 {
 public:
 
-  explicit BrachySteppingAction()=default;
+  explicit BrachySteppingAction();
   ~BrachySteppingAction()override=default; 
   
   void UserSteppingAction(const G4Step*) override;
+  
+  // Methods for radial dose analysis
+  void ExportRadialDoseToFile();
+  
+  // Method to fill 2D histograms with accumulated voxel data
+  void FillVoxelHistograms();
+  
+  // Access to dose arrays for external export
+  const std::vector<G4double>& GetPrimaryRadialDose() const { return fPrimaryRadialDose; }
+  const std::vector<G4double>& GetSecondaryRadialDose() const { return fSecondaryRadialDose; }
+
+private:
+  // Helper function to determine particle generation for proper primary/secondary classification
+  G4bool IsPrimaryContribution(const G4Track* track);
+  // Constants for radial binning
+  static constexpr G4int fNRadialBins = 90; // 4.5 cm / 0.05 cm
+  static constexpr G4double fRadialBinWidth = 0.05; // cm
+  static constexpr G4double fMaxRadius = 4.5; // cm
+  
+  // Constants for 2D voxel binning (same as scoring mesh)
+  static constexpr G4int fN2DBins = 180; // 180x180 bins
+  static constexpr G4double f2DMin = -9.0; // cm
+  static constexpr G4double f2DMax = 9.0; // cm
+  static constexpr G4double f2DBinWidth = 0.1; // cm (18cm / 180bins)
+  
+  // Dose arrays separated by particle type
+  std::vector<G4double> fPrimaryRadialDose;
+  std::vector<G4double> fSecondaryRadialDose;
+  
+  // 2D voxel accumulation maps (180x180 each)
+  std::vector<std::vector<G4double>> fPrimary2DMap;
+  std::vector<std::vector<G4double>> fSecondary2DMap;
 };
 #endif

@@ -1,3 +1,4 @@
+#include "SteppingAction.hh"
 #include "RunAction.hh"
 #include "PrimaryGeneratorAction.hh"
 #include "DetectorConstruction.hh"
@@ -20,7 +21,8 @@ RunAction::RunAction()
   fOutputDirectory("output/"),
   fRunID("run_001"),
   fAirKermaStrength(0.),
-  fDoseRateConstant(0.)
+  fDoseRateConstant(0.),
+  fSteppingAction(nullptr)
 {
     // Register accumulable to the accumulable manager
     G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
@@ -82,6 +84,17 @@ void RunAction::EndOfRunAction(const G4Run* run)
         CalculateTG43Parameters();
         SaveDoseDistribution();
         SaveTG43Results();
+    }
+    
+    // Export radial dose for primaries and secondaries (not just master)
+    G4cout << "Checking fSteppingAction pointer..." << G4endl;
+    if (fSteppingAction) {
+        G4cout << "Exportando datos de primarias y secundarias..." << G4endl;
+        fSteppingAction->ExportRadialDoseToFile(fOutputDirectory + "radial_dose_primary_" + fRunID + ".dat", true);
+        fSteppingAction->ExportRadialDoseToFile(fOutputDirectory + "radial_dose_secondary_" + fRunID + ".dat", false);
+        G4cout << "Radial dose (primarias/secundarias) exportada a archivos en: " << fOutputDirectory << G4endl;
+    } else {
+        G4cout << "WARNING: fSteppingAction es nullptr, no se pueden exportar datos de primarias/secundarias" << G4endl;
     }
 }
 

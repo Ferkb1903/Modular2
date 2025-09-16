@@ -1,81 +1,61 @@
-# =================================================================
-# .gitignore para proyecto de Braquiterapia con Geant4 y Python
-# =================================================================
-
-# --- Directorios de compilación ---
+# Archivos de compilación
 build/
-bin/
-obj/
-output/
-plots/
-
-# --- Archivos compilados ---
 *.o
-*.obj
 *.so
 *.a
-*.dylib
-*.dll
-*.exe
-*.out
-Brachy
-hdr_brachy
 
-# --- CMake ---
-CMakeCache.txt
-CMakeFiles/
-cmake_install.cmake
-Makefile
-
-# --- Archivos ROOT ---
+# Archivos de resultados de simulación
 *.root
-primary_*.root
-*_eDep.root
-brachytherapy*.root
+*.out
+*.log
 
-# --- Entornos virtuales Python ---
-venv/
-build/venv/
-env/
-.venv/
-.env/
+# Archivos de imagen y plots
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.pdf
+*.eps
+*.svg
+
+# Archivos de datos
+*.csv
+*.dat
+*.txt
+results.txt
+output.txt
+
+# Archivos temporales
+*~
+*.bak
+*.backup
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Directorios de resultados
+results/
+output/
+analysis/
+comparison/
+archive_*/
+
+# Archivos IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archivos de sistema
+.directory
+
+# Archivos Python temporales
 __pycache__/
 *.pyc
 *.pyo
-*.pyd
-.Python
+*.egg-info/
 
-# --- Jupyter Notebooks ---
-.ipynb_checkpoints/
-*.ipynb
-
-# --- Archivos de datos temporales ---
-*.dat
-*.log
-*.tmp
-*.temp
-*_backup_*
-*.backup
-
-# --- IDEs y editores ---
-.vscode/
-.idea/
-*.sublime-*
-.vs/
-*.swp
-*.swo
-*~
-
-# --- Archivos específicos del proyecto ---
-archive_old_*/
-History
-flexi_output.log
-
-# --- Archivos del sistema ---
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+# Archivos ROOT temporales
+*.pcm
+*.d
+G4*

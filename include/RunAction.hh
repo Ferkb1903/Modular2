@@ -6,6 +6,7 @@
 #include "globals.hh"
 
 class G4Run;
+class SteppingAction;
 
 /// Run action class
 ///
@@ -24,8 +25,10 @@ public:
     void AddEdep(G4double edep);
     void AddDose(G4double dose);
 
-    // TG-43 parameter calculation methods
+    // SteppingAction management
+    void SetSteppingAction(SteppingAction* steppingAction) { fSteppingAction = steppingAction; }
     void CalculateTG43Parameters();
+    // TG-43 parameter calculation methods
     void SaveDoseDistribution();
     void SaveTG43Results();
 
@@ -42,6 +45,9 @@ private:
     // TG-43 parameters
     G4double fAirKermaStrength;  // Sk in U (μGy⋅m²/h)
     G4double fDoseRateConstant;  // Λ in cGy⋅h⁻¹⋅U⁻¹
+    
+    // Pointer to SteppingAction for data export
+    SteppingAction* fSteppingAction;
 };
 
 #endif

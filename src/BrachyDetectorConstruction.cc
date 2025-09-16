@@ -65,6 +65,8 @@ BrachyDetectorConstruction::BrachyDetectorConstruction():
   fFactory(nullptr), fWorld(nullptr), fWorldLog(nullptr), fWorldPhys(nullptr),
   fPhantom(nullptr), fPhantomLog(nullptr), fPhantomPhys(nullptr),
   fDetectorChoice(0), fEnableHeterogeneities(true), fHeterogeneityType("bone"),
+  fHeterogeneitySize(G4ThreeVector(4.0*cm, 4.0*cm, 4.0*cm)),
+  fHeterogeneityCenter(G4ThreeVector(0, 5.0*cm, 0)),
   fHeterogeneityBox1(nullptr), fHeterogeneityBox2(nullptr),
   fHeterogeneityLog1(nullptr), fHeterogeneityLog2(nullptr),
   fHeterogeneityPhys1(nullptr), fHeterogeneityPhys2(nullptr)
@@ -258,6 +260,22 @@ void BrachyDetectorConstruction::SetHeterogeneityType(G4String heterogeneityType
   G4cout << "Heterogeneity type set to: " << heterogeneityType << G4endl;
 }
 
+void BrachyDetectorConstruction::SetHeterogeneitySize(G4ThreeVector size)
+{
+  fHeterogeneitySize = size;
+  G4cout << "Heterogeneity size set to: (" 
+         << size.x()/cm << ", " << size.y()/cm << ", " << size.z()/cm 
+         << ") cm" << G4endl;
+}
+
+void BrachyDetectorConstruction::SetHeterogeneityCenter(G4ThreeVector center)
+{
+  fHeterogeneityCenter = center;
+  G4cout << "Heterogeneity center set to: (" 
+         << center.x()/cm << ", " << center.y()/cm << ", " << center.z()/cm 
+         << ") cm" << G4endl;
+}
+
 void BrachyDetectorConstruction::ConstructHeterogeneousPhantom()
 {
   if (!fEnableHeterogeneities) return;
@@ -292,25 +310,20 @@ void BrachyDetectorConstruction::ConstructHeterogeneousPhantom()
     heterogeneityMaterial = nist->FindOrBuildMaterial("G4_WATER");
   }
   
-  // Create a single heterogeneity cube above the source
+  // Create a single heterogeneity cube using adjustable parameters
   
-  // Single heterogeneity cube positioned above the source
-  // OPTIMIZACIÓN: Aumentado de 3 cm a 4 cm radio (8×8×8 cm total vs 6×6×6 original)
-  // Beneficio: 2.4x más volumen de heterogeneidad para mejor contraste
-  G4double het_x = 4.0*cm;  // Cube half-size (8×8×8 cm total)
-  G4double het_y = 4.0*cm;
-  G4double het_z = 4.0*cm;
+  // Use adjustable size and position parameters
+  G4double het_x = fHeterogeneitySize.x();
+  G4double het_y = fHeterogeneitySize.y();
+  G4double het_z = fHeterogeneitySize.z();
   
   fHeterogeneityBox1 = new G4Box("HeterogeneityBox", het_x, het_y, het_z);
   fHeterogeneityLog1 = new G4LogicalVolume(fHeterogeneityBox1, heterogeneityMaterial, 
                                           "HeterogeneityLog", nullptr, nullptr, nullptr);
   
-  // Position above the source (source is at center 0,0,0)
-  // OPTIMIZACIÓN: Reducido de 6 cm a 5 cm manteniendo 1 cm de agua segura
-  // Distancia fuente→heterogeneidad = 5-4 = 1 cm (preserva física de buildup)
-  G4double offset_y = 5.0*cm; // Position 5 cm above source (era 6 cm)
+  // Use adjustable center position
   fHeterogeneityPhys1 = new G4PVPlacement(nullptr,
-                                         G4ThreeVector(0, offset_y, 0),
+                                         fHeterogeneityCenter,
                                          "HeterogeneityPhys",
                                          fHeterogeneityLog1,
                                          fPhantomPhys,
@@ -337,5 +350,7 @@ void BrachyDetectorConstruction::ConstructHeterogeneousPhantom()
   G4cout << "  Heterogeneity cube: " << het_x*2./cm << " x " 
          << het_y*2./cm << " x " << het_z*2./cm << " cm (" 
          << heterogeneityMaterial->GetName() << ")" << G4endl;
-  G4cout << "  Position: (0, " << offset_y/cm << ", 0) cm (above source)" << G4endl;
+  G4cout << "  Position: (" << fHeterogeneityCenter.x()/cm << ", " 
+         << fHeterogeneityCenter.y()/cm << ", " << fHeterogeneityCenter.z()/cm 
+         << ") cm" << G4endl;
 }

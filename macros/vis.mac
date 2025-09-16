@@ -1,36 +1,58 @@
-# Visualization macro for HDR Brachytherapy simulation
+# Macro de visualización para simulación HDR Brachytherapy
+# Configuración de la visualización OpenGL
 
-# Use this open statement to create an OpenGL view:
-/vis/open OGL
+# PASO 1: Inicializar la geometría PRIMERO
+/run/initialize
 
-# Draw geometry:
+# PASO 2: Inicializar el sistema de visualización
+/vis/open OGL 800x600-0+0
+
+# PASO 3: Configurar la escena
 /vis/drawVolume
 
-# Specify view angle:
-/vis/viewer/set/viewpointThetaPhi 90. 180.
+# Configurar la vista
+/vis/viewer/set/viewpointVector -1 0 0
+/vis/viewer/set/lightsVector -1 0 0
+/vis/viewer/set/upVector 0 0 1
+/vis/viewer/zoom 1.4
+/vis/viewer/set/style wireframe
+/vis/viewer/set/auxiliaryEdge true
+/vis/viewer/set/lineSegmentsPerCircle 100
 
-# Specify zoom value:
-/vis/viewer/zoom 2.
-
-# Specify style (surface or wireframe):
-/vis/viewer/set/style surface
-
-# Draw coordinate axes:
-/vis/scene/add/axes 0 0 0 5 cm
-
-# Draw smooth trajectories at end of event:
+# Configurar las trayectorias
 /vis/scene/add/trajectories smooth
+/vis/modeling/trajectories/create/drawByCharge
+/vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts true
+/vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 2
 
-# To draw only gammas:
-/vis/filtering/trajectories/create/particleFilter
-/vis/filtering/trajectories/particleFilter-0/add gamma
-
-# Set gamma color to green
+# Configurar colores por partícula
 /vis/modeling/trajectories/create/drawByParticleID
-/vis/modeling/trajectories/drawByParticleID-0/set gamma green
+/vis/modeling/trajectories/drawByParticleID-0/set gamma blue
+/vis/modeling/trajectories/drawByParticleID-0/set e- red
+/vis/modeling/trajectories/drawByParticleID-0/set e+ green
+/vis/modeling/trajectories/drawByParticleID-0/set proton yellow
+/vis/modeling/trajectories/drawByParticleID-0/set neutron white
 
-# Accumulate events 
-/vis/scene/endOfEventAction accumulate
+# Mostrar información de los hits
+/vis/scene/add/hits
 
-# Create empty detector view
-/vis/viewer/flush
+# Configurar el scoring mesh si existe
+/vis/scene/add/psHits
+
+# Configurar etiquetas
+/vis/set/textColour green
+/vis/set/textLayout right
+/vis/scene/add/text2D 0.9 -.9 24 ! ! "HDR Ir-192 Simulation"
+/vis/set/textLayout
+/vis/set/textColour
+
+# Configurar ejes
+/vis/scene/add/axes 0 0 0 50 mm
+
+# Configurar la actualización automática
+/vis/viewer/set/autoRefresh false
+/vis/verbose errors
+
+# Comentar las siguientes líneas para modo batch
+# Para ejecutar eventos en modo visual:
+/run/beamOn 10

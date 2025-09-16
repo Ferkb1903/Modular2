@@ -22,6 +22,12 @@
         "explain_units.C": "cpp",
         "data_3d_to_2d_strategies.C": "cpp",
         "explain_data_extraction.C": "cpp",
-        "explain_coordinate_limits.C": "cpp"
+        "explain_coordinate_limits.C": "cpp",
+        "examine_root.C": "cpp",
+        "compare_systems.C": "cpp",
+        "analisis_completo.C": "cpp",
+        "analisis_corregido.C": "cpp",
+        "comparacion_final.C": "cpp",
+        "analisis_diferencias.C": "cpp"
     }
 }

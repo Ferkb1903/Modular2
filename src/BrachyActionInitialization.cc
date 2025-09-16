@@ -47,8 +47,13 @@ void BrachyActionInitialization::Build() const
 {   
 SetUserAction(new BrachyPrimaryGeneratorAction()); 
 
-SetUserAction(new BrachyRunAction());
+BrachyRunAction* runAction = new BrachyRunAction();
+SetUserAction(runAction);
 
-SetUserAction(new BrachySteppingAction());	
+BrachySteppingAction* steppingAction = new BrachySteppingAction();
+SetUserAction(steppingAction);
+
+// Connect RunAction with SteppingAction for data export
+runAction->SetSteppingAction(steppingAction);
 }  
 

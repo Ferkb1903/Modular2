@@ -29,5 +29,7 @@ void ActionInitialization::Build() const
     EventAction* eventAction = new EventAction(runAction);
     SetUserAction(eventAction);
 
-    SetUserAction(new SteppingAction(eventAction));
+    SteppingAction* steppingAction = new SteppingAction(eventAction);
+    SetUserAction(steppingAction);
+    runAction->SetSteppingAction(steppingAction);
 }

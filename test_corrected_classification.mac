@@ -1,0 +1,28 @@
+# Test macro para validar nueva clasificación primaria/secundaria
+# Usando pocos eventos para test rápido
+
+# Initialize without visualization for speed
+/run/initialize
+
+# Material settings - phantom homogéneo de agua 
+/phantom/enableHeterogeneities false
+
+# Source configuration
+/source/switch Flexi
+/control/execute iridium_source_primary.mac
+
+# Scoring mesh configuration (same setup as before)
+/score/create/boxMesh boxMesh
+/score/mesh/boxSize 12.5 12.5 0.125 cm
+/score/mesh/nBin 180 180 1
+/score/mesh/translate/xyz 0 0 0 cm
+
+# Dose scoring
+/score/quantity/energyDeposit eDep
+/score/close
+
+# Run quick test with fewer events to verify classification
+/run/beamOn 5000
+
+# Export scoring mesh data to ROOT file
+/score/dumpQuantityToFile boxMesh eDep test_corrected_classification.root

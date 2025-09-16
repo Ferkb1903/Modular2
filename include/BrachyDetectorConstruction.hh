@@ -64,6 +64,8 @@ public:
   // Heterogeneity methods
   void EnableHeterogeneities(G4bool enable);
   void SetHeterogeneityType(G4String type);
+  void SetHeterogeneitySize(G4ThreeVector size);
+  void SetHeterogeneityCenter(G4ThreeVector center);
   void ConstructHeterogeneousPhantom(); 
 
 private:
@@ -91,6 +93,8 @@ private:
   // Heterogeneity variables
   G4bool fEnableHeterogeneities;
   G4String fHeterogeneityType;
+  G4ThreeVector fHeterogeneitySize;     // Half-size of heterogeneity cube
+  G4ThreeVector fHeterogeneityCenter;   // Center position of heterogeneity
   G4Box* fHeterogeneityBox1;
   G4Box* fHeterogeneityBox2;
   G4LogicalVolume* fHeterogeneityLog1;
